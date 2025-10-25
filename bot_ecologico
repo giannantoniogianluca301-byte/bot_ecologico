@@ -1,0 +1,70 @@
+import discord
+import random
+import string
+from discord.ext import commands
+import os
+# la variabile intents contiene i permessi al bot
+intents = discord.Intents.default()
+# abilita il permesso a leggere i contenuti dei messaggi
+intents.message_content = True
+# crea un bot e passa gli indents
+bot = commands.Bot(command_prefix="", intents=discord.Intents.all())
+
+rifiutiplastici = ("secchio giallo")
+rifiutiorganico = ("secchio marrone")
+rifiuticartacei = ("secchio blu")
+rifiutidivetro = ("secchio verde")
+rifiutiinfferenziata = ("secchio grigio")
+
+
+@bot.event
+async def on_ready():
+    print(f'Abbiamo fatto l\'accesso come {bot.user}')
+
+@bot.command()
+async def calendario(ctx):
+    with open(f'immagini/download.jpg', 'rb') as f:
+        # Memorizziamo il file della libreria di Discord convertito in questa variabile!
+        picture = discord.File(f)
+   # Possiamo quindi inviare questo file come parametro!
+    await ctx.send(file=picture)
+
+
+
+@bot.command()
+async def colori_dei_contenitori(ctx):
+    with open(f'immagini/cestino.jpg', 'rb') as f:
+        # Memorizziamo il file della libreria di Discord convertito in questa variabile!
+        picture = discord.File(f)
+   # Possiamo quindi inviare questo file come parametro!
+    await ctx.send(file=picture)
+
+
+@bot.command()
+async def pulisci(ctx):
+    await ctx.channel.purge()
+
+
+@bot.event
+async def on_message(message):
+    if message.author == bot.user:
+        return
+    if message.content.startswith('rifiuti di carta'):
+        await message.channel.send(rifiuticartacei)
+    elif message.content.startswith('rifiuti di plastica'):
+        await message.channel.send(rifiutiplastici)
+    elif message.content.startswith('rifiuti di vetro'):
+        await message.channel.send(rifiutidivetro)
+    elif message.content.startswith('rifiuti organici'):
+        await message.channel.send(rifiutiorganico)
+    elif message.content.startswith('rifiutii nel indifferenziata'):
+        await message.channel.send(rifiutiinfferenziata)
+    
+    await bot.process_commands(message)
+
+
+
+
+
+
+bot.run("metti il tuo token")
